@@ -20,7 +20,7 @@ variable "name" {
 
 variable "docker_version" {
   type        = string
-  default     = 28.0.4
+  default     = "28.0.4"
   description = "Docker version to install"
 }
 
@@ -36,24 +36,24 @@ variable "instance_type" {
 
 variable "vpc_id" {
   type        = string
-  default     = vpc-bfccf4d7
+  default     = "vpc-bfccf4d7"
   description = "VPC ID for EC2 instance"
 }
 
 variable "subnet_id" {
   type        = string
-  default     = subnet-6127e62d
+  default     = "subnet-6127e62d"
   description = "Subnet ID for EC2 instance"
 }
 
 variable "security_group" {
   type        = string
-  default     = sg-08e8243a8cfbea8a0
+  default     = "sg-08e8243a8cfbea8a0"
   description = "Security Group for EC2 instance"
 }
 
 variable "ssh_user" {
-  default     = "ec2-user"
+  default     = "ubuntu"
   description = "SSH user"
 }
 

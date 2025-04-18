@@ -6,6 +6,7 @@ on:
       ami_id:
         description: 'AMI ID to use in EC2'
         required: true
+        default: ami-0862be96e41dcbf74
         type: string
       docker_version:
         description: 'Docker version (e.g., 20.10.17)'
