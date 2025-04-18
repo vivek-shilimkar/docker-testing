@@ -8,8 +8,13 @@ on:
         required: true
         default: ami-0862be96e41dcbf74
         type: string
+      ssh_user:
+        description: 'SSH user for the instance'
+        required: true
+        default: 'ubuntu'
+        type: string
       docker_version:
-        description: 'Docker version (e.g., 20.10.17)'
+        description: 'Docker version (e.g., 28.0.4)'
         required: true
         default: '28.0.4'
         type: string
@@ -36,6 +41,14 @@ on:
         required: true
         default: 'sg-08e8243a8cfbea8a0'
         type: string
+      AWS_KEY_ID:
+        description: 'AWS Key ID'
+        required: true
+        type: string
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -45,12 +58,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
+    
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.5.7
 
+    - name: Set AWS Credentials
+      run: |
+        echo "AWS_ACCESS_KEY_ID=${{ github.event.inputs.AWS_KEY_ID }}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+    
     - name: Terraform Init
       run: terraform init
 
@@ -63,4 +81,6 @@ jobs:
           -var="docker_version=${{ github.event.inputs.docker_version }}" \
           -var="vpc_id=${{ github.event.inputs.vpc_id }}" \
           -var="subnet_id=${{ github.event.inputs.subnet_id }}" \
-          -var="security_group=${{ github.event.inputs.security_group }}"
+          -var="security_group=${{ github.event.inputs.security_group }}" \
+          -var="AWS_KEY_ID=${{ github.event.inputs.AWS_KEY_ID }}" \
+          -var="AWS_SECRET_ACCESS_KEY=${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}"

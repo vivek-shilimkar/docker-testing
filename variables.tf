@@ -68,11 +68,3 @@ variable "AWS_SECRET_ACCESS_KEY" {
 variable "AWS_REGION" {
   description = "AWS REGION"
 }
-
-variable "AWS_DEFAULT_OUTPUT" {
-  description = "AWS DEFAULT OUTPUT"
-}
-
-variable "BTPASSWORD" {
-  description = "Bootstrap Password"
-}
