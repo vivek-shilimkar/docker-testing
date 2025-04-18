@@ -54,4 +54,11 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        terraform apply -auto-approve           -var="rancher_url=${{ github.event.inputs.rancher_url }}"           -var="rancher_token=${RANCHER_TOKEN}"           -var="ami_id=${{ github.event.inputs.ami_id }}"           -var="docker_version=${{ github.event.inputs.docker_version }}"           -var="vpc_id=${{ github.event.inputs.vpc_id }}"           -var="subnet_id=${{ github.event.inputs.subnet_id }}"           -var="security_group=${{ github.event.inputs.security_group }}"
+        terraform apply -auto-approve \
+          -var="rancher_url=${{ github.event.inputs.rancher_url }}" \
+          -var="rancher_token=${{ github.event.inputs.rancher_token }}" \
+          -var="ami_id=${{ github.event.inputs.ami_id }}" \
+          -var="docker_version=${{ github.event.inputs.docker_version }}" \
+          -var="vpc_id=${{ github.event.inputs.vpc_id }}" \
+          -var="subnet_id=${{ github.event.inputs.subnet_id }}" \
+          -var="security_group=${{ github.event.inputs.security_group }}"
