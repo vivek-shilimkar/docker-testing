@@ -10,6 +10,7 @@ on:
       docker_version:
         description: 'Docker version (e.g., 20.10.17)'
         required: true
+        default: '28.0.4'
         type: string
       rancher_url:
         description: 'Rancher server URL'
@@ -21,18 +22,18 @@ on:
         type: string
       vpc_id:
         description: 'AWS VPC ID'
-        required: false
-        default: 'vpc-xxxxxxxx'
+        required: true
+        default: 'vpc-bfccf4d7'
         type: string
       subnet_id:
         description: 'AWS Subnet ID'
-        required: false
-        default: 'subnet-yyyyyyyy'
+        required: true
+        default: 'subnet-6127e62d'
         type: string
       security_group:
         description: 'AWS Security Group Name'
-        required: false
-        default: 'rancher-nodes'
+        required: true
+        default: 'sg-08e8243a8cfbea8a0'
         type: string
 
 jobs:
