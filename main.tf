@@ -27,7 +27,7 @@ resource "http_request" "create_node_template" {
       sshUser           = var.ssh_user,
       privateAddressOnly = false
     },
-    engineInstallURL = "https://releases.rancher.com/install-docker/${var.docker_version}.sh"
+    engineInstallURL = "https://releases.rancher.com/install-docker-dev/${var.docker_version}.sh"
   })
 }
 
