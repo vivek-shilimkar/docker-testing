@@ -64,7 +64,3 @@ variable "AWS_KEY_ID" {
 variable "AWS_SECRET_ACCESS_KEY" {
   description = "SECRET KEY ID"
 }
-
-variable "AWS_REGION" {
-  description = "AWS REGION"
-}

@@ -73,4 +73,6 @@ jobs:
           -var="docker_version=${{ github.event.inputs.docker_version }}" \
           -var="vpc_id=${{ github.event.inputs.vpc_id }}" \
           -var="subnet_id=${{ github.event.inputs.subnet_id }}" \
-          -var="security_group=${{ github.event.inputs.security_group }}"
+          -var="security_group=${{ github.event.inputs.security_group }}" \
+          -var="AWS_KEY_ID=${{ secrets.AWS_KEY_ID }}" \
+          -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
