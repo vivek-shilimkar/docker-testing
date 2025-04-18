@@ -16,6 +16,7 @@ variable "ami_id" {
 
 variable "name" {
   description = "AWS Instance name tag"
+  default     = "vivek-docker-testing"
 }
 
 variable "docker_version" {
