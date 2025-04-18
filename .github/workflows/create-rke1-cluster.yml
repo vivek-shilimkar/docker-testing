@@ -15,6 +15,10 @@ on:
         description: 'Rancher server URL'
         required: true
         type: string
+      rancher_token:
+        description: 'Rancher API token'
+        required: true
+        type: string
       vpc_id:
         description: 'AWS VPC ID'
         required: false
@@ -35,9 +39,6 @@ jobs:
   deploy:
     name: Create RKE1 Cluster via Rancher Node Driver
     runs-on: ubuntu-latest
-
-    env:
-      RANCHER_TOKEN: ${{ secrets.RANCHER_TOKEN }}
 
     steps:
     - name: Checkout
