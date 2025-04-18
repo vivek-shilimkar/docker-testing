@@ -1,0 +1,56 @@
+name: Create RKE1 Cluster with Node Driver (Terraform)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ami_id:
+        description: 'AMI ID to use in EC2'
+        required: true
+        type: string
+      docker_version:
+        description: 'Docker version (e.g., 20.10.17)'
+        required: true
+        type: string
+      rancher_url:
+        description: 'Rancher server URL'
+        required: true
+        type: string
+      vpc_id:
+        description: 'AWS VPC ID'
+        required: false
+        default: 'vpc-xxxxxxxx'
+        type: string
+      subnet_id:
+        description: 'AWS Subnet ID'
+        required: false
+        default: 'subnet-yyyyyyyy'
+        type: string
+      security_group:
+        description: 'AWS Security Group Name'
+        required: false
+        default: 'rancher-nodes'
+        type: string
+
+jobs:
+  deploy:
+    name: Create RKE1 Cluster via Rancher Node Driver
+    runs-on: ubuntu-latest
+
+    env:
+      RANCHER_TOKEN: ${{ secrets.RANCHER_TOKEN }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.5.7
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      run: |
+        terraform apply -auto-approve           -var="rancher_url=${{ github.event.inputs.rancher_url }}"           -var="rancher_token=${RANCHER_TOKEN}"           -var="ami_id=${{ github.event.inputs.ami_id }}"           -var="docker_version=${{ github.event.inputs.docker_version }}"           -var="vpc_id=${{ github.event.inputs.vpc_id }}"           -var="subnet_id=${{ github.event.inputs.subnet_id }}"           -var="security_group=${{ github.event.inputs.security_group }}"
