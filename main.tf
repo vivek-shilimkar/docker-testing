@@ -67,8 +67,8 @@ resource "null_resource" "create_node_pools" {
     command = <<EOT
 set -e
 
-CLUSTER_ID=$$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/clusters?name=$$CLUSTER_NAME" | jq -r '.data[0].id')
-TEMPLATE_ID=$$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/nodetemplates?name=$$NODE_TEMPLATE_NAME" | jq -r '.data[0].id')
+CLUSTER_ID=$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/clusters?name=$$CLUSTER_NAME" | jq -r '.data[0].id')
+TEMPLATE_ID=$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/nodetemplates?name=$$NODE_TEMPLATE_NAME" | jq -r '.data[0].id')
 
 echo "Using Cluster ID: $$CLUSTER_ID"
 echo "Using Template ID: $$TEMPLATE_ID"
