@@ -8,7 +8,7 @@ locals {
 resource "null_resource" "create_node_template" {
   provisioner "local-exec" {
     command = <<EOT
-curl -X POST "${var.rancher_url}/v3/nodetemplate" \
+curl -k -X POST "${var.rancher_url}/v3/nodetemplate" \
   -H "Authorization: Bearer ${var.rancher_token}" \
   -H "Content-Type: application/json" \
   -d '{
