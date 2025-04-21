@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     http = {
-      source  = "Mastercard/http"
-      version = "~> 1.2.0"
+      source  = "paultyng/http"
+      version = "~> 2.0"
     }
   }
 }
