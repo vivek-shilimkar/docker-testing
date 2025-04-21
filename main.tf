@@ -53,10 +53,11 @@ EOT
 }
 
 resource "null_resource" "create_node_pools" {
-  depends_on = [null_resource.create_cluster]
+  depends_on = [http_request.create_cluster]
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
+
     environment = {
       RANCHER_URL        = var.rancher_url
       RANCHER_TOKEN      = var.rancher_token
@@ -67,36 +68,46 @@ resource "null_resource" "create_node_pools" {
     command = <<EOT
 set -e
 
-CLUSTER_ID=$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/clusters?name=$$CLUSTER_NAME" | jq -r '.data[0].id')
-TEMPLATE_ID=$(curl -sk -H "Authorization: Bearer $$RANCHER_TOKEN" "$$RANCHER_URL/v3/nodetemplates?name=$$NODE_TEMPLATE_NAME" | jq -r '.data[0].id')
+# Get Cluster ID
+CLUSTER_ID=\$(curl -sk -H "Authorization: Bearer \$RANCHER_TOKEN" "\$RANCHER_URL/v3/clusters?name=\$CLUSTER_NAME" | jq -r '.data[0].id')
 
-echo "Using Cluster ID: $$CLUSTER_ID"
-echo "Using Template ID: $$TEMPLATE_ID"
+# Get Template ID
+TEMPLATE_ID=\$(curl -sk -H "Authorization: Bearer \$RANCHER_TOKEN" "\$RANCHER_URL/v3/nodetemplates?name=\$NODE_TEMPLATE_NAME" | jq -r '.data[0].id')
 
-declare -A roles=( ["controlplane"]="true,false,false" ["etcd"]="false,true,false" ["worker1"]="false,false,true" ["worker2"]="false,false,true" )
+echo "Using Cluster ID: \$CLUSTER_ID"
+echo "Using Template ID: \$TEMPLATE_ID"
 
-for role in "$${!roles[@]}"; do
-  IFS=',' read -r control etcd worker <<< "$${roles[$$role]}"
+# Declare roles as a Bash associative array
+declare -A roles
+roles["controlplane"]="true,false,false"
+roles["etcd"]="false,true,false"
+roles["worker1"]="false,false,true"
+roles["worker2"]="false,false,true"
 
-  payload=$$(cat <<EOF
+# Loop over roles
+for role in "\${!roles[@]}"; do
+  IFS=',' read -r control etcd worker <<< "\${roles[\$role]}"
+
+  payload=\$(cat <<EOF
 {
   "type": "nodePool",
-  "clusterId": "$$CLUSTER_ID",
-  "hostnamePrefix": "$${role}-",
-  "nodeTemplateId": "$$TEMPLATE_ID",
+  "clusterId": "\$CLUSTER_ID",
+  "hostnamePrefix": "\$role-",
+  "nodeTemplateId": "\$TEMPLATE_ID",
   "quantity": 1,
-  "controlPlane": $$control,
-  "etcd": $$etcd,
-  "worker": $$worker
+  "controlPlane": \$control,
+  "etcd": \$etcd,
+  "worker": \$worker
 }
 EOF
 )
 
-  curl -sk -X POST "$$RANCHER_URL/v3/nodepool" \
-    -H "Authorization: Bearer $$RANCHER_TOKEN" \
+  curl -sk -X POST "\$RANCHER_URL/v3/nodepool" \
+    -H "Authorization: Bearer \$RANCHER_TOKEN" \
     -H "Content-Type: application/json" \
-    -d "$$payload"
+    -d "\$payload"
 done
 EOT
   }
 }
+
