@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    http = {
+      source  = "Mastercard/http"
+      version = "~> 1.2.0"
+    }
+  }
+}
+
 provider "http" {}
 
 locals {
@@ -8,7 +17,7 @@ locals {
 resource "http_request" "create_node_template" {
   url    = "${var.rancher_url}/v3/nodetemplate"
   method = "POST"
-  headers = {
+  request_headers = {
     Authorization = "Bearer ${var.rancher_token}"
     Content-Type  = "application/json"
   }
@@ -17,15 +26,17 @@ resource "http_request" "create_node_template" {
     name        = local.node_template_name,
     driver      = "amazonec2",
     amazonec2Config = {
-      ami               = var.ami_id,
-      region            = var.region,
-      instanceType      = var.instance_type,
-      vpcId             = var.vpc_id,
-      subnetId          = var.subnet_id,
-      zone              = "a",
-      securityGroup     = var.security_group,
-      sshUser           = var.ssh_user,
-      privateAddressOnly = false
+      accessKey           = var.AWS_KEY_ID,
+      secretKey           = var.AWS_SECRET_ACCESS_KEY,
+      ami                 = var.ami_id,
+      region              = var.region,
+      instanceType        = var.instance_type,
+      vpcId               = var.vpc_id,
+      subnetId            = var.subnet_id,
+      zone                = "a",
+      securityGroup       = var.security_group,
+      sshUser             = var.ssh_user,
+      privateAddressOnly  = false
     },
     engineInstallURL = "https://releases.rancher.com/install-docker-dev/${var.docker_version}.sh"
   })
@@ -36,7 +47,7 @@ resource "http_request" "create_cluster" {
 
   url    = "${var.rancher_url}/v3/cluster"
   method = "POST"
-  headers = {
+  request_headers = {
     Authorization = "Bearer ${var.rancher_token}"
     Content-Type  = "application/json"
   }
